@@ -10,32 +10,32 @@ const endpoint: any = process.env.NEXT_PUBLIC_HASURA_ENDPOINT
 let graphQLClient: GraphQLClient
 
 export const useAppMutate = () => {
-	const dispatch = useDispatch()
-	const queryClient = useQueryClient()
+  const dispatch = useDispatch()
+  const queryClient = useQueryClient()
 
-	useEffect(() => {
-		graphQLClient = new GraphQLClient(endpoint)
-	}, [])
+  useEffect(() => {
+    graphQLClient = new GraphQLClient(endpoint)
+  }, [])
 
-	const createArticleMutation = useMutation(
-		(article: EditArticle) => graphQLClient.request(CREATE_ARTICLE, article),
-		{
-			onSuccess: (res) => {
-				const previousTodos = queryClient.getQueryData<Articles[]>('articles')
-				if (previousTodos) {
-					queryClient.setQueryData('articles', [
-						...previousTodos,
-						res.insert_articles_one,
-					])
-				}
-				dispatch(resetEditedArticle())
-			},
-			onError: () => {
-				dispatch(resetEditedArticle())
-			},
-		}
-	)
-	return {
-		createArticleMutation,
-	}
+  const createArticleMutation = useMutation(
+    (article: EditArticle) => graphQLClient.request(CREATE_ARTICLE, article),
+    {
+      onSuccess: (res) => {
+        const previousTodos = queryClient.getQueryData<Articles[]>('articles')
+        if (previousTodos) {
+          queryClient.setQueryData('articles', [
+            ...previousTodos,
+            res.insert_articles_one,
+          ])
+        }
+        dispatch(resetEditedArticle())
+      },
+      onError: () => {
+        dispatch(resetEditedArticle())
+      },
+    }
+  )
+  return {
+    createArticleMutation,
+  }
 }

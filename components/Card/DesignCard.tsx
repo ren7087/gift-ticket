@@ -9,15 +9,19 @@ import {
   Typography,
 } from '@mui/material'
 import Card from '@mui/material/Card'
-import { MouseEventHandler } from 'react'
+import { MouseEventHandler, useEffect, useState } from 'react'
 import { FC } from 'react'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 import ClearIcon from '@mui/icons-material/Clear'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
+import { generateRandomAvatarOptions } from '../avatar'
+import Avatar from 'avataaars'
+import { AvatarType } from '../../types/type'
 
 type Props = {
   label?: string
   price?: string
+  title?: string
   marginTop?: string
   marginLeft?: string
   marginRight?: string
@@ -43,6 +47,7 @@ const DesignCard: FC<Props> = (props) => {
   const {
     label,
     price,
+    title,
     backgroundColor = '#f28728',
     color = '#fff',
     size,
@@ -86,6 +91,13 @@ const DesignCard: FC<Props> = (props) => {
     height,
   }
 
+  const [avatarOptions, setAvatarOptions] = useState<AvatarType>()
+
+  useEffect(() => {
+    let avatar: any = generateRandomAvatarOptions()
+    setAvatarOptions(avatar)
+  }, [])
+
   return (
     <Card sx={{ maxWidth: 345 }} style={{ borderRadius: '20px' }}>
       <CardActionArea>
@@ -94,12 +106,10 @@ const DesignCard: FC<Props> = (props) => {
             <Chip label="primary" color="primary" style={chipStyle} />
           </Stack>
         </CardContent>
-        <CardMedia
-          component="img"
-          height="170"
-          image="https://res.cloudinary.com/tanp/image/fetch/c_fill,f_auto,q_auto,w_2000/https://s3.ap-northeast-1.amazonaws.com/gracia.tanp/product14892/DSC00042.jpg"
-          alt="green iguana"
-          style={imageStyle}
+        <Avatar
+          style={{ width: '100px', height: '100px', paddingLeft: '35%' }}
+          avatarStyle="Circle"
+          {...avatarOptions}
         />
         <CardContent>
           <Typography
@@ -108,7 +118,7 @@ const DesignCard: FC<Props> = (props) => {
             component="div"
             style={fontStyle}
           >
-            リップクリーム
+            {title}
           </Typography>
           <div
             style={{ display: 'flex', textAlign: 'center', marginTop: '20px' }}

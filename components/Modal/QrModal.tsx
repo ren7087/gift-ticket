@@ -1,9 +1,11 @@
-import { Box, Modal, Typography } from '@mui/material'
+import { Box, Button, Modal, TextField, Typography } from '@mui/material'
 import React, { FC, useState } from 'react'
 import QRCode from 'react-qr-code'
 
 type Props = {
   open: boolean
+  articleId: string
+  display: string
   handleCloseQrModal: () => void
 }
 
@@ -17,10 +19,11 @@ const style = {
   borderRadius: '6px',
   boxShadow: 24,
   p: 4,
+  display: 'flex',
 }
 
 const QrModal: FC<Props> = (props) => {
-  const { open, handleCloseQrModal } = props
+  const { open, articleId, handleCloseQrModal } = props
 
   return (
     <Modal
@@ -30,13 +33,29 @@ const QrModal: FC<Props> = (props) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
-        </Typography>
+        <div>
+          <Typography
+            id="modal-modal-title"
+            variant="body1"
+            style={{ paddingBottom: '5%' }}
+          >
+            送信先
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="user"
+            variant="outlined"
+            style={{ paddingBottom: '5%' }}
+          />
+          <Button variant="contained">submit</Button>
+        </div>
+        <div style={{ margin: '10% 10%' }}>
+          <p>or</p>
+        </div>
         <QRCode
-          size={256}
-          style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-          value="https://qiita.com/"
+          size={100}
+          style={{ height: 'auto', maxWidth: '100%', width: '200px' }}
+          value={articleId}
           viewBox={`0 0 256 256`}
         />
       </Box>

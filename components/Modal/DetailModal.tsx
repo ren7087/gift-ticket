@@ -1,8 +1,15 @@
 import { Box, Modal, Typography } from '@mui/material'
 import React, { FC, useState } from 'react'
+import { Articles } from '../../types/type'
+import 'easymde/dist/easymde.min.css'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
 
 type Props = {
   open: boolean
+  article: string
   handleCloseDetailModal: () => void
 }
 
@@ -19,7 +26,8 @@ const style = {
 }
 
 const DetailModal: FC<Props> = (props) => {
-  const { open, handleCloseDetailModal } = props
+  const { open, article, handleCloseDetailModal } = props
+  console.log(article)
   return (
     <Modal
       open={open}
@@ -28,12 +36,12 @@ const DetailModal: FC<Props> = (props) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </Typography>
+        <ReactMarkdown
+          rehypePlugins={[rehypeRaw, rehypeSanitize]}
+          remarkPlugins={[remarkGfm]}
+        >
+          {article}
+        </ReactMarkdown>
       </Box>
     </Modal>
   )
