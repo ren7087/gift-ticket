@@ -7,7 +7,7 @@ import { useAppMutate } from '../../hooks/useAppMutate'
 import {
   selectArticleStatus,
   setEditedArticleStatus,
-} from '../../slices/articleStatus'
+} from '../../slices/article'
 
 type Props = {
   open: boolean
@@ -52,42 +52,43 @@ const QrModal: FC<Props> = (props) => {
     >
       <Box sx={style}>
         <div>
-          <Typography
-            id="modal-modal-title"
-            variant="body1"
-            style={{ paddingBottom: '5%', fontWeight: 'bold' }}
-          >
-            送信先
-          </Typography>
-          <TextField
-            label="email"
-            variant="outlined"
-            value={editedArticleStatus.receiverId}
-            onChange={(e) =>
-              dispatch(
-                setEditedArticleStatus({
-                  ...editedArticleStatus,
-                  receiverId: e.target.value,
-                })
-              )
-            }
-            style={{ paddingBottom: '5%' }}
-          />
-          <TextField
-            label="article"
-            variant="outlined"
-            value={editedArticleStatus.articleId}
-            onChange={(e) =>
-              dispatch(
-                setEditedArticleStatus({
-                  ...editedArticleStatus,
-                  articleId: e.target.value,
-                })
-              )
-            }
-            style={{ paddingBottom: '5%' }}
-          />
           <form onSubmit={submitHandler}>
+            <Typography
+              id="modal-modal-title"
+              variant="body1"
+              style={{ paddingBottom: '5%', fontWeight: 'bold' }}
+            >
+              送信先
+            </Typography>
+            <TextField
+              label="email"
+              variant="outlined"
+              value={editedArticleStatus.receiverId}
+              onChange={(e) =>
+                dispatch(
+                  setEditedArticleStatus({
+                    ...editedArticleStatus,
+                    receiverId: e.target.value,
+                  })
+                )
+              }
+              style={{ paddingBottom: '5%' }}
+            />
+            <TextField
+              label="article"
+              variant="outlined"
+              value={editedArticleStatus.articleId}
+              onChange={(e) =>
+                dispatch(
+                  setEditedArticleStatus({
+                    ...editedArticleStatus,
+                    articleId: e.target.value,
+                  })
+                )
+              }
+              style={{ paddingBottom: '5%' }}
+            />
+
             <Button
               variant="contained"
               style={{

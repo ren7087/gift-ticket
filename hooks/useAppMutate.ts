@@ -9,8 +9,7 @@ import {
   EditArticleStatus,
 } from '../types/type'
 import { useDispatch } from 'react-redux'
-import { resetEditedArticle } from '../slices/article'
-import { resetEditedArticleStatus } from '../slices/articleStatus'
+import { resetEditedArticle, resetEditedArticleStatus } from '../slices/article'
 
 const endpoint: any = process.env.NEXT_PUBLIC_HASURA_ENDPOINT
 let graphQLClient: GraphQLClient

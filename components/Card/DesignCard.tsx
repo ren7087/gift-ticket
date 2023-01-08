@@ -16,9 +16,11 @@ import ClearIcon from '@mui/icons-material/Clear'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import { generateRandomAvatarOptions } from '../avatar'
 import Avatar from 'avataaars'
-import { AvatarType } from '../../types/type'
+import { Articles, AvatarType } from '../../types/type'
+import { setEditedArticleStatus } from '../../slices/article'
 
 type Props = {
+  article?: Articles
   label?: string
   price?: string
   title?: string
@@ -45,6 +47,7 @@ type Props = {
  */
 const DesignCard: FC<Props> = (props) => {
   const {
+    article,
     label,
     price,
     title,
@@ -142,6 +145,15 @@ const DesignCard: FC<Props> = (props) => {
             <div
               style={{ width: '23%', marginLeft: '10%' }}
               onClick={handleOpenQrModal}
+              // onClick={() => {
+              //   handleOpenQrModal
+              //   dispatch(
+              //     setEditedArticleStatus({
+              //       articleId: article?.id,
+              //       receiverId: '',
+              //     })
+              //   )
+              // }}
             >
               <AddAPhotoIcon fontSize="small" />
               <Typography
@@ -173,3 +185,6 @@ const DesignCard: FC<Props> = (props) => {
 }
 
 export default DesignCard
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.')
+}

@@ -29,10 +29,26 @@ export const article = createSlice({
     resetEditedArticle: (state) => {
       state.editedArticle = initialState.editedArticle
     },
+    setEditedArticleStatus: (
+      state,
+      action: PayloadAction<EditArticleStatus>
+    ) => {
+      state.editedArticleStatus = action.payload
+    },
+    resetEditedArticleStatus: (state) => {
+      state.editedArticleStatus = initialState.editedArticleStatus
+    },
   },
 })
-export const { setEditedArticle, resetEditedArticle } = article.actions
+export const {
+  setEditedArticle,
+  resetEditedArticle,
+  setEditedArticleStatus,
+  resetEditedArticleStatus,
+} = article.actions
 
 export const selectArticle = (state: RootState) => state.article.editedArticle
+export const selectArticleStatus = (state: RootState) =>
+  state.article.editedArticleStatus
 
 export default article.reducer

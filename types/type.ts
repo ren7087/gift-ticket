@@ -25,7 +25,7 @@ export interface ArticleStatus {
 }
 
 export interface EditArticleStatus {
-  articleId: string
+  articleId: string | undefined
   receiverId: string
   isDone?: boolean
 }

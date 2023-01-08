@@ -1,0 +1,37 @@
+// import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+// import { EditArticleStatus } from '../types/type'
+// import { RootState } from '../app/store'
+
+// export interface uiState {
+//   editedArticleStatus: EditArticleStatus
+// }
+
+// const initialState: uiState = {
+//   editedArticleStatus: {
+//     articleId: '',
+//     receiverId: '',
+//     isDone: false,
+//   },
+// }
+// export const articleStatus = createSlice({
+//   name: 'articleStatus',
+//   initialState,
+//   reducers: {
+//     setEditedArticleStatus: (
+//       state,
+//       action: PayloadAction<EditArticleStatus>
+//     ) => {
+//       state.editedArticleStatus = action.payload
+//     },
+//     resetEditedArticleStatus: (state) => {
+//       state.editedArticleStatus = initialState.editedArticleStatus
+//     },
+//   },
+// })
+// export const { setEditedArticleStatus, resetEditedArticleStatus } =
+//   articleStatus.actions
+
+// export const selectArticleStatus = (state: RootState) =>
+//   state.article.editedArticleStatus
+
+// export default articleStatus.reducer

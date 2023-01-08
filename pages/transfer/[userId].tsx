@@ -44,6 +44,7 @@ const Index = () => {
           article.userId == router.query.userId && (
             <>
               <DesignCard
+                article={article}
                 key={article.id}
                 label={'カートに追加する'}
                 price={'1000'}

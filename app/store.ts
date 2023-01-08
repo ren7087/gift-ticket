@@ -5,7 +5,6 @@ import articleStatusReducer from '../slices/article'
 export const store = configureStore({
   reducer: {
     article: articleReducer,
-    articleStatus: articleStatusReducer,
   },
 })
 export type RootState = ReturnType<typeof store.getState>
