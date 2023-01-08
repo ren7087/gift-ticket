@@ -13,9 +13,16 @@ import Paper from '@mui/material/Paper'
 
 const Index = () => {
   const router = useRouter()
-  const { useQueryArticleUserSelected, useQueryArticle } = UseQueryArticle()
+  const {
+    useQueryArticleUserSelected,
+    useQueryArticle,
+    useQueryArticleReceiver,
+    useQueryArticleStatus,
+  } = UseQueryArticle()
   // const { status, data } = useQueryArticleUserSelected(router.query.userId)
-  const { status, data } = useQueryArticle()
+  // const { status, data } = useQueryArticle()
+  const { status, data } = useQueryArticleStatus()
+  // const { status, data } = useQueryArticleReceiver(router.query.userId)
   // @ts-ignore
   const array = data?.articles
 

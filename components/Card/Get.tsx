@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-const CardGet = () => {
+type Props = {
+  userId: string
+}
+
+const CardGet: FC<Props> = (props) => {
+  const { userId } = props
   const router = useRouter()
   const handleRoute = () => {
-    router.push('/get')
+    router.push(`/get/${userId}`)
   }
   return (
     <Card

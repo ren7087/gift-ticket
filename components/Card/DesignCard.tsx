@@ -161,7 +161,7 @@ const DesignCard: FC<Props> = (props) => {
                 variant="body2"
                 style={{ fontWeight: 'bold' }}
               >
-                バーコード
+                送信
               </Typography>
             </div>
             <div

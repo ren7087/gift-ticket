@@ -111,7 +111,7 @@ const Home: NextPage = () => {
           </Grid>
           <Grid item xs={4}>
             <Item style={{ padding: 0 }}>
-              <CardGet />
+              <CardGet userId={loginUser?.user.id || ''} />
             </Item>
           </Grid>
         </Grid>

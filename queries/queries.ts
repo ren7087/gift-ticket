@@ -25,6 +25,18 @@ export const GET_ARTICLES = gql`
   }
 `
 
+export const GET_ARTICLE_STATUS = gql`
+  query GetArticleStatus {
+    articles_status {
+      id
+      articleId
+      receiverId
+      isDone
+      created_at
+    }
+  }
+`
+
 export const GET_ARTICLE_SELECTED = gql`
   query GetArticleSelected($id: uuid!) {
     articles_by_pk(id: $id) {
@@ -40,6 +52,18 @@ export const GET_ARTICLE_SELECTED = gql`
 export const GET_ARTICLE_SELECTED_USER = gql`
   query GetArticleSelectedUser($userId: uuid! = "") {
     articles(where: { userId: { _eq: $userId } }) {
+      id
+      userId
+      title
+      content
+    }
+  }
+`
+
+//取得したチケットのデータを取得したい
+export const GET_ARTICLE_RECEIVER = gql`
+  query GetArticleReceiver($receiverId: uuid_comparison_exp = {}) {
+    articles(where: { articles_statuses: { receiverId: $receiverId } }) {
       id
       userId
       title

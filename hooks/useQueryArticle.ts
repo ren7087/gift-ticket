@@ -1,11 +1,17 @@
 import { FC, useEffect, useState } from 'react'
 import { GraphQLClient, Variables } from 'graphql-request'
 import { useQuery } from 'react-query'
-import { Articles, QueryArticleUserSelected } from '../types/type'
+import {
+  Articles,
+  QueryArticleUserSelected,
+  ArticleStatus,
+} from '../types/type'
 import {
   GET_ARTICLES,
+  GET_ARTICLE_STATUS,
   GET_ARTICLE_SELECTED_USER,
   GET_ARTICLE_SELECTED,
+  GET_ARTICLE_RECEIVER,
 } from '../queries/queries'
 import supabase from '../utils/supabase-client'
 import { Session } from '@supabase/supabase-js'
@@ -35,7 +41,11 @@ const UseQueryArticle = () => {
   let graphQLClient: GraphQLClient
 
   interface ArticlesRes {
-    artiicles: Articles[]
+    articles: Articles[]
+  }
+
+  interface ArticlesStatusRes {
+    articleStatus: ArticleStatus[]
   }
 
   interface ArticlesResDetail {
@@ -44,6 +54,13 @@ const UseQueryArticle = () => {
 
   const fetchArticle = async () => {
     const data: any = await graphQLClient.request<ArticlesRes>(GET_ARTICLES)
+    return data
+  }
+
+  const fetchArticleStatus = async () => {
+    const data: any = await graphQLClient.request<ArticlesStatusRes>(
+      GET_ARTICLE_STATUS
+    )
     return data
   }
 
@@ -57,14 +74,24 @@ const UseQueryArticle = () => {
   }
 
   const fetchArticleDetail = async (id: any) => {
-    const { articles_by_pk: data } =
-      await graphQLClient.request<ArticlesResDetail>(GET_ARTICLE_SELECTED, {
+    const articles_by_pk: any = await graphQLClient.request<ArticlesResDetail>(
+      GET_ARTICLE_SELECTED,
+      {
         id: id,
-      })
+      }
+    )
+    return articles_by_pk
+  }
+
+  const fetchArticleReceiver = async (receiverId: any) => {
+    const data: any = await graphQLClient.request<ArticleStatus>(
+      GET_ARTICLE_RECEIVER,
+      { receiverId: receiverId }
+    )
     return data
   }
 
-  //全て取得
+  //article全て取得
   const useQueryArticle = () => {
     useEffect(() => {
       graphQLClient = new GraphQLClient(endpoint)
@@ -72,6 +99,18 @@ const UseQueryArticle = () => {
     return useQuery<Articles[], Error>({
       queryKey: 'articles',
       queryFn: fetchArticle,
+      staleTime: 0,
+    })
+  }
+
+  //status全て取得
+  const useQueryArticleStatus = () => {
+    useEffect(() => {
+      graphQLClient = new GraphQLClient(endpoint)
+    }, [])
+    return useQuery<ArticleStatus[], Error>({
+      queryKey: 'articleStatus',
+      queryFn: fetchArticleStatus,
       staleTime: 0,
     })
   }
@@ -100,7 +139,24 @@ const UseQueryArticle = () => {
   //   })
   // }
 
-  return { useQueryArticleUserSelected, useQueryArticle }
+  //全て取得
+  const useQueryArticleReceiver = (receiverId: any) => {
+    useEffect(() => {
+      graphQLClient = new GraphQLClient(endpoint)
+    }, [])
+    return useQuery<ArticleStatus[], Error>({
+      queryKey: 'articleReceiver',
+      queryFn: fetchArticleReceiver,
+      staleTime: 0,
+    })
+  }
+
+  return {
+    useQueryArticleUserSelected,
+    useQueryArticle,
+    useQueryArticleStatus,
+    useQueryArticleReceiver,
+  }
 }
 
 export default UseQueryArticle
