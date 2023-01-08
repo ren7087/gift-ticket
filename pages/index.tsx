@@ -15,6 +15,7 @@ import GoogleIcon from '@mui/icons-material/Google'
 import supabase from '../utils/supabase-client'
 import { useEffect, useState } from 'react'
 import { Session } from '@supabase/supabase-js'
+import Navbar from '../components/Navbar'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -38,6 +39,7 @@ const Home: NextPage = () => {
   }, [])
   return (
     <Layout title="home">
+      <Navbar page={'home'} />
       <Container
         maxWidth="xl"
         style={{

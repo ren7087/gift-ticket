@@ -1,4 +1,4 @@
-import React, { useMemo, useState, FormEvent } from 'react'
+import React, { useMemo, useState, FormEvent, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
@@ -21,14 +21,29 @@ import FastForwardIcon from '@mui/icons-material/FastForward'
 import UseUser from '../hooks/useUser'
 import { useAppMutate } from '../hooks/useAppMutate'
 import { useSelector, useDispatch } from 'react-redux'
-import { setEditedArticle, selectArticle } from '../slices/uiSlice'
+import { setEditedArticle, selectArticle } from '../slices/article'
 import Navbar from './Navbar'
+import { Session } from '@supabase/supabase-js'
 
 interface inputData {
   [prop: string]: any
 }
 
 const MarkdownEditor = () => {
+  //loginUser取得
+  const [loginUser, setLoginUser] = useState<string>('')
+  const getSession = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    if (session) {
+      setLoginUser(session.user.id)
+    }
+  }
+  useEffect(() => {
+    getSession()
+  }, [])
+
   // const [markdownValue, setMarkdownValue] = useState('')
   const [switchBoolean, setSwitchBoolean] = useState(false)
   const { session } = UseUser()
@@ -154,21 +169,40 @@ const MarkdownEditor = () => {
             setEditedArticle({ ...editedArticle, title: e.target.value })
           )
         }
-        style={{ width: '80%', margin: '20px 10%', fontSize: '30px' }}
+        style={{ width: '80%', margin: '20px 10% 5px', fontSize: '30px' }}
       />
 
-      <input
+      {/* {editedArticle.userId !== '' ? (
+        <InputBase
+          disabled
+          value={editedArticle.userId}
+          onChange={() =>
+            dispatch(
+              setEditedArticle({
+                ...editedArticle,
+                // @ts-ignore
+                userId: session?.user.id,
+              })
+            )
+          }
+          style={{ width: '80%', margin: '0 10%', fontSize: '15px' }}
+        />
+      ) : ( */}
+      <InputBase
+        // disabled
         value={editedArticle.userId}
-        onChange={() =>
+        placeholder="IDを入力 : プロフィール欄から確認できます"
+        onChange={(e) =>
           dispatch(
             setEditedArticle({
               ...editedArticle,
-              userId: session?.user.id || '',
+              userId: e.target.value,
             })
           )
         }
-        style={{ display: 'none' }}
+        style={{ width: '80%', margin: '0 10%', fontSize: '15px' }}
       />
+      {/* )} */}
 
       <div style={{ display: 'flex' }}>
         {switchBoolean === false ? (

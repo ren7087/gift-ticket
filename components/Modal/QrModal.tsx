@@ -1,6 +1,13 @@
 import { Box, Button, Modal, TextField, Typography } from '@mui/material'
-import React, { FC, useState } from 'react'
+import React, { FC, FormEvent, useState } from 'react'
 import QRCode from 'react-qr-code'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { useAppMutate } from '../../hooks/useAppMutate'
+import {
+  selectArticleStatus,
+  setEditedArticleStatus,
+} from '../../slices/articleStatus'
 
 type Props = {
   open: boolean
@@ -25,6 +32,17 @@ const style = {
 const QrModal: FC<Props> = (props) => {
   const { open, articleId, handleCloseQrModal } = props
 
+  console.log('articleId', articleId)
+
+  const dispatch = useDispatch()
+  const editedArticleStatus = useSelector(selectArticleStatus)
+  const { createArticleStatusMutation } = useAppMutate()
+
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    createArticleStatusMutation.mutate(editedArticleStatus)
+  }
+
   return (
     <Modal
       open={open}
@@ -37,17 +55,49 @@ const QrModal: FC<Props> = (props) => {
           <Typography
             id="modal-modal-title"
             variant="body1"
-            style={{ paddingBottom: '5%' }}
+            style={{ paddingBottom: '5%', fontWeight: 'bold' }}
           >
             送信先
           </Typography>
           <TextField
-            id="outlined-basic"
-            label="user"
+            label="email"
             variant="outlined"
+            value={editedArticleStatus.receiverId}
+            onChange={(e) =>
+              dispatch(
+                setEditedArticleStatus({
+                  ...editedArticleStatus,
+                  receiverId: e.target.value,
+                })
+              )
+            }
             style={{ paddingBottom: '5%' }}
           />
-          <Button variant="contained">submit</Button>
+          <TextField
+            label="article"
+            variant="outlined"
+            value={editedArticleStatus.articleId}
+            onChange={(e) =>
+              dispatch(
+                setEditedArticleStatus({
+                  ...editedArticleStatus,
+                  articleId: e.target.value,
+                })
+              )
+            }
+            style={{ paddingBottom: '5%' }}
+          />
+          <form onSubmit={submitHandler}>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: 'black',
+              }}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </form>
         </div>
         <div style={{ margin: '10% 10%' }}>
           <p>or</p>

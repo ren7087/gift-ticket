@@ -1,10 +1,16 @@
 import { useEffect } from 'react'
 import { useQueryClient, useMutation } from 'react-query'
 import { GraphQLClient } from 'graphql-request'
-import { CREATE_ARTICLE } from '../queries/queries'
-import { Articles, EditArticle } from '../types/type'
+import { CREATE_ARTICLE, CREATE_ARTICLE_STATUS } from '../queries/queries'
+import {
+  Articles,
+  ArticleStatus,
+  EditArticle,
+  EditArticleStatus,
+} from '../types/type'
 import { useDispatch } from 'react-redux'
-import { resetEditedArticle } from '../slices/uiSlice'
+import { resetEditedArticle } from '../slices/article'
+import { resetEditedArticleStatus } from '../slices/articleStatus'
 
 const endpoint: any = process.env.NEXT_PUBLIC_HASURA_ENDPOINT
 let graphQLClient: GraphQLClient
@@ -21,10 +27,11 @@ export const useAppMutate = () => {
     (article: EditArticle) => graphQLClient.request(CREATE_ARTICLE, article),
     {
       onSuccess: (res) => {
-        const previousTodos = queryClient.getQueryData<Articles[]>('articles')
-        if (previousTodos) {
+        const previousArticles =
+          queryClient.getQueryData<Articles[]>('articles')
+        if (previousArticles) {
           queryClient.setQueryData('articles', [
-            ...previousTodos,
+            ...previousArticles,
             res.insert_articles_one,
           ])
         }
@@ -35,7 +42,30 @@ export const useAppMutate = () => {
       },
     }
   )
+
+  const createArticleStatusMutation = useMutation(
+    (articleStatus: EditArticleStatus) =>
+      graphQLClient.request(CREATE_ARTICLE_STATUS, articleStatus),
+    {
+      onSuccess: (res) => {
+        const previousArticleStatus =
+          queryClient.getQueryData<ArticleStatus[]>('articleStatus')
+        if (previousArticleStatus) {
+          queryClient.setQueryData('articleStatus', [
+            ...previousArticleStatus,
+            res.insert_articles_status_one,
+          ])
+        }
+        dispatch(resetEditedArticleStatus())
+      },
+      onError: () => {
+        dispatch(resetEditedArticleStatus())
+        console.log('error')
+      },
+    }
+  )
   return {
     createArticleMutation,
+    createArticleStatusMutation,
   }
 }

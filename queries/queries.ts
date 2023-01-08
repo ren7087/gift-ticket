@@ -47,3 +47,25 @@ export const GET_ARTICLE_SELECTED_USER = gql`
     }
   }
 `
+
+export const CREATE_ARTICLE_STATUS = gql`
+  mutation CreateArtcleStatus(
+    $articleId: uuid!
+    $receiverId: uuid!
+    $isDone: Boolean
+  ) {
+    insert_articles_status_one(
+      object: {
+        articleId: $articleId
+        receiverId: $receiverId
+        isDone: $isDone
+      }
+    ) {
+      id
+      articleId
+      receiverId
+      isDone
+      created_at
+    }
+  }
+`

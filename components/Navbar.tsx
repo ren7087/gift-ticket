@@ -9,11 +9,17 @@ import {
 import { Box } from '@mui/system'
 import GoogleIcon from '@mui/icons-material/Google'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import React from 'react'
+import React, { FC } from 'react'
 import UseUser from '../hooks/useUser'
 import { useRouter } from 'next/router'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
-const Navbar = () => {
+type Props = {
+  page?: string
+}
+
+const Navbar: FC<Props> = (props) => {
+  const { page } = props
   const router = useRouter()
   const { session, signOut, signInWithGoogle } = UseUser()
   return (
@@ -24,16 +30,18 @@ const Navbar = () => {
         style={{ backgroundColor: 'white' }}
       >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            style={{ color: 'black' }}
-          >
-            <ArrowBackIosIcon onClick={() => router.push('/')} />
-          </IconButton>
+          {page !== 'home' && (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              style={{ color: 'black' }}
+            >
+              <ArrowBackIosIcon onClick={() => router.push('/')} />
+            </IconButton>
+          )}
           <Typography
             variant="h6"
             component="div"
@@ -60,10 +68,20 @@ const Navbar = () => {
           <Link
             href="/get"
             underline="none"
-            style={{ color: 'black', fontWeight: 'bold', margin: '0 4%' }}
+            style={{ color: 'black', fontWeight: 'bold', margin: '0 2%' }}
           >
             Get
           </Link>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            style={{ color: 'black', margin: '0 4%' }}
+          >
+            <AccountCircleIcon onClick={() => router.push('/')} />
+          </IconButton>
 
           {session ? (
             <Button
@@ -71,7 +89,7 @@ const Navbar = () => {
               startIcon={<GoogleIcon />}
               size="large"
               onClick={() => signOut()}
-              style={{ backgroundColor: 'black' }}
+              style={{ backgroundColor: 'white' }}
             >
               サインアウト
             </Button>

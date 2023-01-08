@@ -17,6 +17,19 @@ export interface QueryArticleUserSelected {
   userId: string
 }
 
+export interface ArticleStatus {
+  id: string
+  articleId: string
+  receiverId: string
+  isDone?: boolean
+}
+
+export interface EditArticleStatus {
+  articleId: string
+  receiverId: string
+  isDone?: boolean
+}
+
 export interface AvatarType {
   accessoriesType: string
   clotheColor: string
