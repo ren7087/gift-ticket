@@ -218,6 +218,7 @@ const MarkdownEditor = () => {
               dispatch(setEditedArticle({ ...editedArticle, content: value }))
             }
             // options={{ autoUploadImage, toolbar: toolbar }}
+            // @ts-ignore
             options={{ autoUploadImage }}
             style={{ width: '70%', margin: '0 5% 0 10%' }}
           />
