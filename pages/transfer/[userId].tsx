@@ -7,7 +7,7 @@ import UseQueryArticle from '../../hooks/useQueryArticle'
 import { useRouter } from 'next/router'
 import { Articles } from '../../types/type'
 import Navbar from '../../components/Navbar'
-import { Grid } from '@mui/material'
+import { Box, CircularProgress, Grid } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 
@@ -37,7 +37,12 @@ const Index = () => {
   // const handleClick = async () => {
   //   refetch()
   // }
-  if (status === 'loading') return <div>{'Loading...'}</div>
+  if (status === 'loading')
+    return (
+      <Box sx={{ display: 'flex', margin: '40% 0 0 45%' }}>
+        <CircularProgress />
+      </Box>
+    )
   if (status === 'error') return <div>{'Error'}</div>
   return (
     <div>

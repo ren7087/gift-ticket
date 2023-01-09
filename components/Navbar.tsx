@@ -9,10 +9,12 @@ import {
 import { Box } from '@mui/system'
 import GoogleIcon from '@mui/icons-material/Google'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import UseUser from '../hooks/useUser'
 import { useRouter } from 'next/router'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { Session } from '@supabase/supabase-js'
+import supabase from '../utils/supabase-client'
 
 type Props = {
   page?: string
@@ -22,6 +24,16 @@ const Navbar: FC<Props> = (props) => {
   const { page } = props
   const router = useRouter()
   const { session, signOut, signInWithGoogle } = UseUser()
+  const [loginUser, setLoginUser] = useState<Session | null>(null)
+  const getSession = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    setLoginUser(session)
+  }
+  useEffect(() => {
+    getSession()
+  }, [])
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -52,21 +64,21 @@ const Navbar: FC<Props> = (props) => {
           </Typography>
 
           <Link
-            href="/create"
+            href="/customize"
             underline="none"
             style={{ color: 'black', fontWeight: 'bold', margin: '0 2%' }}
           >
             Create
           </Link>
           <Link
-            href="/transfer"
+            href={`/transfer/${loginUser?.user.id}`}
             underline="none"
             style={{ color: 'black', fontWeight: 'bold', margin: '0 2%' }}
           >
             Transfer
           </Link>
           <Link
-            href="/get"
+            href={`/get/${loginUser?.user.id}`}
             underline="none"
             style={{ color: 'black', fontWeight: 'bold', margin: '0 2%' }}
           >
@@ -80,10 +92,10 @@ const Navbar: FC<Props> = (props) => {
             sx={{ mr: 2 }}
             style={{ color: 'black', margin: '0 4%' }}
           >
-            <AccountCircleIcon onClick={() => router.push('/')} />
+            <AccountCircleIcon onClick={() => router.push(`/settings/`)} />
           </IconButton>
 
-          {session ? (
+          {loginUser ? (
             <Button
               variant="outlined"
               startIcon={<GoogleIcon />}
