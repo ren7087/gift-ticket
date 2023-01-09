@@ -134,24 +134,24 @@ const MarkdownEditor = () => {
     createArticleMutation.mutate(editedArticle)
   }
 
-  const toolbar = [
-    'bold',
-    'italic',
-    'heading',
-    '|',
-    'quote',
-    'unordered-list',
-    'ordered-list',
-    '|',
-    'link',
-    'image',
-    '|',
-    'preview',
-    'side-by-side',
-    'fullscreen',
-    '|',
-    'guide',
-  ]
+  // const toolbar = [
+  //   'bold',
+  //   'italic',
+  //   'heading',
+  //   '|',
+  //   'quote',
+  //   'unordered-list',
+  //   'ordered-list',
+  //   '|',
+  //   'link',
+  //   'image',
+  //   '|',
+  //   'preview',
+  //   'side-by-side',
+  //   'fullscreen',
+  //   '|',
+  //   'guide',
+  // ]
 
   if (createArticleMutation.error) {
     return <div>{'Error'}</div>
@@ -217,7 +217,8 @@ const MarkdownEditor = () => {
             onChange={(value: any) =>
               dispatch(setEditedArticle({ ...editedArticle, content: value }))
             }
-            options={{ autoUploadImage, toolbar: toolbar }}
+            // options={{ autoUploadImage, toolbar: toolbar }}
+            options={{ autoUploadImage }}
             style={{ width: '70%', margin: '0 5% 0 10%' }}
           />
         ) : (
