@@ -31,13 +31,13 @@ interface inputData {
 
 const MarkdownEditor = () => {
   //loginUser取得
-  const [loginUser, setLoginUser] = useState<string>('')
+  const [loginUser, setLoginUser] = useState<Session | null>()
   const getSession = async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession()
     if (session) {
-      setLoginUser(session.user.id)
+      setLoginUser(session)
     }
   }
   useEffect(() => {
@@ -78,12 +78,12 @@ const MarkdownEditor = () => {
 
     const { data: inputData }: inputData = await supabase.storage
       .from('images')
-      .upload(`${session?.user.id}/${newImageKey}`, file, {
+      .upload(`${loginUser?.user.id}/${newImageKey}`, file, {
         cacheControl: '3600',
         upsert: true,
       })
 
-    const key = `images/${session?.user.id}/${newImageKey}`
+    const key = `images/${loginUser?.user.id}/${newImageKey}`
 
     if (!key) {
       throw new Error('Error')
@@ -99,7 +99,7 @@ const MarkdownEditor = () => {
     // DBにレコード作成
     await supabase.from('images').insert([
       {
-        userId: session?.user.id,
+        userId: loginUser?.user.id,
         src: publicURL,
       },
     ])
@@ -155,6 +155,10 @@ const MarkdownEditor = () => {
 
   if (createArticleMutation.error) {
     return <div>{'Error'}</div>
+  }
+
+  if (!loginUser) {
+    return <p>このページはログイン必須です</p>
   }
   return (
     <div>
