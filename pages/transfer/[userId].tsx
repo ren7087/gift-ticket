@@ -7,7 +7,7 @@ import UseQueryArticle from '../../hooks/useQueryArticle'
 import { useRouter } from 'next/router'
 import { Articles } from '../../types/type'
 import Navbar from '../../components/Navbar'
-import { Box, CircularProgress, Grid } from '@mui/material'
+import { Box, CircularProgress, Grid, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 
@@ -34,6 +34,8 @@ const Index = () => {
   }
   const handleCloseDetailModal = () => setOpenDetailModal(false)
 
+  const matches: boolean = useMediaQuery('(min-width:639px)')
+
   // const handleClick = async () => {
   //   refetch()
   // }
@@ -51,7 +53,7 @@ const Index = () => {
         {array?.map(
           (article: Articles) =>
             article.userId == router.query.userId && (
-              <Grid item xs={4} key={article.id}>
+              <Grid item xs={matches ? 4 : 12} key={article.id}>
                 <DesignCard
                   article={article}
                   key={article.id}

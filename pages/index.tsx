@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper'
 import Image from 'next/image'
 import { Layout } from '../components/Layout'
 import Typography from '@mui/material/Typography'
-import { Button, Container, Grid } from '@mui/material'
+import { Button, Container, Grid, useMediaQuery } from '@mui/material'
 import { Box } from '@mui/system'
 import CardCreate from '../components/Card/Create'
 import CardTransfer from '../components/Card/Transfer'
@@ -37,6 +37,8 @@ const Home: NextPage = () => {
   useEffect(() => {
     getSession()
   }, [])
+
+  const matches: boolean = useMediaQuery('(min-width:639px)')
   return (
     <Layout title="home">
       <Navbar page={'home'} />
@@ -46,7 +48,7 @@ const Home: NextPage = () => {
           textAlign: 'center',
           backgroundColor: 'white',
           width: '100%',
-          display: 'flex',
+          display: matches ? 'flex' : '',
         }}
       >
         <div style={{ width: '50%' }}>
@@ -57,18 +59,27 @@ const Home: NextPage = () => {
             alt="head img"
           />
         </div>
-        <div style={{ width: '50%', marginLeft: '10%' }}>
+        <div
+          style={{
+            width: '50%',
+            marginLeft: matches ? '10%' : '35%',
+            marginBottom: matches ? '' : '50px',
+          }}
+        >
           <Typography
             variant="h3"
             style={{
               fontWeight: 'bold',
               marginBottom: '5%',
-              marginTop: '190px',
+              marginTop: matches ? '190px' : '',
             }}
           >
-            GIFTticket
+            {matches ? 'GIFTticket' : 'ticket'}
           </Typography>
-          <Typography variant="h3" style={{ fontWeight: 'bold', margin: '5%' }}>
+          <Typography
+            variant={matches ? 'h3' : 'h5'}
+            style={{ fontWeight: 'bold', margin: '5%' }}
+          >
             「 GIFT 」
           </Typography>
           {loginUser ? (
@@ -97,19 +108,19 @@ const Home: NextPage = () => {
           )}
         </div>
       </Container>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1 }} style={{ marginLeft: matches ? '' : '20%' }}>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={matches ? 4 : 12}>
             <Item style={{ padding: 0 }}>
               <CardCreate />
             </Item>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={matches ? 4 : 12}>
             <Item style={{ padding: 0 }}>
               <CardTransfer userId={loginUser?.user.id || ''} />
             </Item>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={matches ? 4 : 12}>
             <Item style={{ padding: 0 }}>
               <CardGet userId={loginUser?.user.id || ''} />
             </Item>

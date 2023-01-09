@@ -7,7 +7,7 @@ import UseQueryArticle from '../../hooks/useQueryArticle'
 import { useRouter } from 'next/router'
 import { Articles, ArticleStatus } from '../../types/type'
 import Navbar from '../../components/Navbar'
-import { Box, CircularProgress, Grid } from '@mui/material'
+import { Box, CircularProgress, Grid, useMediaQuery } from '@mui/material'
 
 const Index = () => {
   const router = useRouter()
@@ -42,6 +42,8 @@ const Index = () => {
   }
   const handleCloseDetailModal = () => setOpenDetailModal(false)
 
+  const matches: boolean = useMediaQuery('(min-width:639px)')
+
   // const handleClick = async () => {
   //   refetch()
   // }
@@ -57,50 +59,54 @@ const Index = () => {
       <Navbar />
       <Grid container spacing={2} style={{ margin: '1%' }}>
         {articleStatusArray?.map((articles_status: ArticleStatus) => {
-          articles_status.receiverId === router.query.userId &&
-            array?.map(
-              (article: Articles) =>
-                article.userId === router.query.userId &&
-                articles_status.articleId === article.id && (
-                  <Grid item xs={4} key={article.id}>
-                    <DesignCard
-                      article={article}
-                      key={article.id}
-                      label={'カートに追加する'}
-                      price={'1000'}
-                      title={article.title}
-                      size={'100'}
-                      borderRadius={'20px'}
-                      width={'90%'}
-                      color={'#F8C4CF'}
-                      backgroundColor={'#F8C4CF'}
-                      fontWeight={'bold'}
-                      marginTop={'15px'}
-                      marginRight={'15%'}
-                      marginLeft={'5%'}
-                      margin={'5%'}
-                      handleOpenDeleteModal={handleOpenDeleteModal}
-                      handleOpenQrModal={handleOpenQrModal}
-                      handleOpenDetailModal={handleOpenDetailModal}
-                    />
-                    <DeleteModal
-                      open={openDeleteModal}
-                      handleCloseDeleteModal={handleCloseDeleteModal}
-                    />
-                    <QrModal
-                      open={openQrModal}
-                      handleCloseQrModal={handleCloseQrModal}
-                      articleId={article.id}
-                      display={'flex'}
-                    />
-                    <DetailModal
-                      open={openDetailModal}
-                      handleCloseDetailModal={handleCloseDetailModal}
-                      article={article.content}
-                    />
-                  </Grid>
-                )
+          articles_status.receiverId === router.query.userId ? (
+            array?.map((article: Articles) =>
+              article.userId === router.query.userId &&
+              articles_status.articleId === article.id ? (
+                <Grid item xs={matches ? 4 : 12} key={article.id}>
+                  <DesignCard
+                    article={article}
+                    key={article.id}
+                    label={'カートに追加する'}
+                    price={'1000'}
+                    title={article.title}
+                    size={'100'}
+                    borderRadius={'20px'}
+                    width={'90%'}
+                    color={'#F8C4CF'}
+                    backgroundColor={'#F8C4CF'}
+                    fontWeight={'bold'}
+                    marginTop={'15px'}
+                    marginRight={'15%'}
+                    marginLeft={'5%'}
+                    margin={'5%'}
+                    handleOpenDeleteModal={handleOpenDeleteModal}
+                    handleOpenQrModal={handleOpenQrModal}
+                    handleOpenDetailModal={handleOpenDetailModal}
+                  />
+                  <DeleteModal
+                    open={openDeleteModal}
+                    handleCloseDeleteModal={handleCloseDeleteModal}
+                  />
+                  <QrModal
+                    open={openQrModal}
+                    handleCloseQrModal={handleCloseQrModal}
+                    articleId={article.id}
+                    display={'flex'}
+                  />
+                  <DetailModal
+                    open={openDetailModal}
+                    handleCloseDetailModal={handleCloseDetailModal}
+                    article={article.content}
+                  />
+                </Grid>
+              ) : (
+                <p key={article.id}>取得したチケットはありません</p>
+              )
             )
+          ) : (
+            <p>IDが一致していません</p>
+          )
         })}
       </Grid>
     </div>

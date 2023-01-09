@@ -5,6 +5,7 @@ import {
   Link,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from '@mui/material'
 import { Box } from '@mui/system'
 import GoogleIcon from '@mui/icons-material/Google'
@@ -21,6 +22,7 @@ type Props = {
 }
 
 const Navbar: FC<Props> = (props) => {
+  const matches: boolean = useMediaQuery('(min-width:639px)')
   const { page } = props
   const router = useRouter()
   const { session, signOut, signInWithGoogle } = UseUser()
@@ -54,14 +56,16 @@ const Navbar: FC<Props> = (props) => {
               <ArrowBackIosIcon onClick={() => router.push('/')} />
             </IconButton>
           )}
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-            style={{ color: 'black', fontWeight: 'bold' }}
-          >
-            Gift
-          </Typography>
+          {matches && (
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1 }}
+              style={{ color: 'black', fontWeight: 'bold' }}
+            >
+              Gift
+            </Typography>
+          )}
 
           <Link
             href="/customize"
@@ -103,7 +107,7 @@ const Navbar: FC<Props> = (props) => {
               onClick={() => signOut()}
               style={{ backgroundColor: 'white' }}
             >
-              サインアウト
+              {matches && 'サインアウト'}
             </Button>
           ) : (
             <Button
@@ -113,7 +117,7 @@ const Navbar: FC<Props> = (props) => {
               onClick={() => signInWithGoogle()}
               style={{ backgroundColor: 'black' }}
             >
-              ログイン
+              {matches && 'ログイン'}
             </Button>
           )}
         </Toolbar>
