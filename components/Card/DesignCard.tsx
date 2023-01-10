@@ -123,6 +123,14 @@ const DesignCard: FC<Props> = (props) => {
           >
             {title}
           </Typography>
+          <Typography
+            gutterBottom
+            variant="body2"
+            component="div"
+            style={fontStyle}
+          >
+            ID : {article?.id}
+          </Typography>
           <div
             style={{ display: 'flex', textAlign: 'center', marginTop: '20px' }}
           >
