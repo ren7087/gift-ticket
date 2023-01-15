@@ -17,24 +17,15 @@ import supabase from '../utils/supabase-client'
 import { Session } from '@supabase/supabase-js'
 
 const UseQueryArticle = () => {
-  const [session, setSession] = useState<Session | null>(null)
+  const [loginUser, setLoginUser] = useState<Session | null>(null)
+  const getSession = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    setLoginUser(session)
+  }
   useEffect(() => {
-    const getInitialSession = async () => {
-      const initialSession = (await supabase.auth.getSession())?.data.session
-      setSession(initialSession)
-    }
-
-    getInitialSession()
-
-    const authListener = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session)
-      }
-    )
-
-    return () => {
-      authListener.data.subscription.unsubscribe()
-    }
+    getSession()
   }, [])
 
   const endpoint: any = process.env.NEXT_PUBLIC_HASURA_ENDPOINT
@@ -83,10 +74,12 @@ const UseQueryArticle = () => {
     return articles_by_pk
   }
 
-  const fetchArticleReceiver = async (receiverId: any) => {
+  const fetchArticleReceiver = async (receiverId: string) => {
     const data: any = await graphQLClient.request<ArticleStatus>(
       GET_ARTICLE_RECEIVER,
-      { receiverId: receiverId }
+      {
+        receiverId: receiverId,
+      }
     )
     return data
   }
@@ -139,14 +132,15 @@ const UseQueryArticle = () => {
   //   })
   // }
 
-  //全て取得
-  const useQueryArticleReceiver = (receiverId: any) => {
+  //get一覧取得
+  const useQueryArticleReceiver = (receiverId: string) => {
     useEffect(() => {
       graphQLClient = new GraphQLClient(endpoint)
+      console.log('receiverId', receiverId)
     }, [])
     return useQuery<ArticleStatus[], Error>({
-      queryKey: 'articleReceiver',
-      queryFn: fetchArticleReceiver,
+      queryKey: ['articleReceiver', receiverId],
+      queryFn: () => fetchArticleReceiver(receiverId),
       staleTime: 0,
     })
   }

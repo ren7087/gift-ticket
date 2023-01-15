@@ -18,6 +18,7 @@ import { generateRandomAvatarOptions } from '../avatar'
 import Avatar from 'avataaars'
 import { Articles, AvatarType } from '../../types/type'
 import { setEditedArticleStatus } from '../../slices/article'
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
 
 type Props = {
   article?: Articles
@@ -37,9 +38,11 @@ type Props = {
   width?: string
   height?: string
   margin?: string
+  getPage?: boolean
   handleOpenDeleteModal: MouseEventHandler<HTMLDivElement>
-  handleOpenQrModal: MouseEventHandler<HTMLDivElement>
+  handleOpenQrModal?: MouseEventHandler<HTMLDivElement>
   handleOpenDetailModal: MouseEventHandler<HTMLDivElement>
+  handleOpenIsDoneModal?: MouseEventHandler<HTMLDivElement>
 }
 
 /**
@@ -64,9 +67,11 @@ const DesignCard: FC<Props> = (props) => {
     width,
     margin,
     height,
+    getPage,
     handleOpenDeleteModal,
     handleOpenQrModal,
     handleOpenDetailModal,
+    handleOpenIsDoneModal,
   } = props
 
   const imageStyle = {
@@ -150,28 +155,44 @@ const DesignCard: FC<Props> = (props) => {
                 削除
               </Typography>
             </div>
-            <div
-              style={{ width: '23%', marginLeft: '10%' }}
-              onClick={handleOpenQrModal}
-              // onClick={() => {
-              //   handleOpenQrModal
-              //   dispatch(
-              //     setEditedArticleStatus({
-              //       articleId: article?.id,
-              //       receiverId: '',
-              //     })
-              //   )
-              // }}
-            >
-              <AddAPhotoIcon fontSize="small" />
-              <Typography
-                gutterBottom
-                variant="body2"
-                style={{ fontWeight: 'bold' }}
+            {getPage ? (
+              <div
+                style={{ width: '23%', marginLeft: '10%' }}
+                onClick={handleOpenIsDoneModal}
               >
-                送信
-              </Typography>
-            </div>
+                <AssignmentTurnedInIcon fontSize="small" />
+                <Typography
+                  gutterBottom
+                  variant="body2"
+                  style={{ fontWeight: 'bold' }}
+                >
+                  DONE
+                </Typography>
+              </div>
+            ) : (
+              <div
+                style={{ width: '23%', marginLeft: '10%' }}
+                onClick={handleOpenQrModal}
+                // onClick={() => {
+                //   handleOpenQrModal
+                //   dispatch(
+                //     setEditedArticleStatus({
+                //       articleId: article?.id,
+                //       receiverId: '',
+                //     })
+                //   )
+                // }}
+              >
+                <AddAPhotoIcon fontSize="small" />
+                <Typography
+                  gutterBottom
+                  variant="body2"
+                  style={{ fontWeight: 'bold' }}
+                >
+                  送信
+                </Typography>
+              </div>
+            )}
             <div
               style={{ width: '23%', marginLeft: '10%' }}
               onClick={handleOpenDetailModal}

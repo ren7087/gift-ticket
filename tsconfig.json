@@ -29,6 +29,6 @@
     "components/avatar.js",
     "components/avatar.js",
     "components/avatar.js"
-  ],
+, "slices/articleStatus.txt"  ],
   "exclude": ["node_modules"]
 }

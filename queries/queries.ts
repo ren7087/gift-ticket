@@ -62,8 +62,10 @@ export const GET_ARTICLE_SELECTED_USER = gql`
 
 //取得したチケットのデータを取得したい
 export const GET_ARTICLE_RECEIVER = gql`
-  query GetArticleReceiver($receiverId: uuid_comparison_exp = {}) {
-    articles(where: { articles_statuses: { receiverId: $receiverId } }) {
+  query GetArticleReceiver($receiverId: uuid = "") {
+    articles(
+      where: { articles_statuses: { receiverId: { _eq: $receiverId } } }
+    ) {
       id
       userId
       title

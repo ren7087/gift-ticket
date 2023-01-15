@@ -83,7 +83,11 @@ const MarkdownEditor = () => {
         upsert: true,
       })
 
+    console.log(inputData)
+
     const key = `images/${loginUser?.user.id}/${newImageKey}`
+
+    console.log('key', key)
 
     if (!key) {
       throw new Error('Error')
@@ -111,6 +115,7 @@ const MarkdownEditor = () => {
   }
 
   const autoUploadImage = useMemo(() => {
+    console.log('image')
     return {
       uploadImage: true,
       imageUploadFunction,
@@ -133,25 +138,6 @@ const MarkdownEditor = () => {
     e.preventDefault()
     createArticleMutation.mutate(editedArticle)
   }
-
-  // const toolbar = [
-  //   'bold',
-  //   'italic',
-  //   'heading',
-  //   '|',
-  //   'quote',
-  //   'unordered-list',
-  //   'ordered-list',
-  //   '|',
-  //   'link',
-  //   'image',
-  //   '|',
-  //   'preview',
-  //   'side-by-side',
-  //   'fullscreen',
-  //   '|',
-  //   'guide',
-  // ]
 
   if (createArticleMutation.error) {
     return <div>{'Error'}</div>
