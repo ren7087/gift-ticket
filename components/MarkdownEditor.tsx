@@ -12,6 +12,7 @@ import rehypeSanitize from 'rehype-sanitize'
 import supabase from '../utils/supabase-client'
 import {
   Button,
+  IconButton,
   InputBase,
   ToggleButton,
   ToggleButtonGroup,
@@ -24,6 +25,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setEditedArticle, selectArticle } from '../slices/article'
 import Navbar from './Navbar'
 import { Session } from '@supabase/supabase-js'
+import PhotoCamera from '@mui/icons-material/PhotoCamera'
 
 interface inputData {
   [prop: string]: any
@@ -32,6 +34,7 @@ interface inputData {
 const MarkdownEditor = () => {
   //loginUser取得
   const [loginUser, setLoginUser] = useState<Session | null>()
+  const [writing, setWriting] = useState<boolean>(true)
   const getSession = async () => {
     const {
       data: { session },
@@ -42,6 +45,12 @@ const MarkdownEditor = () => {
   }
   useEffect(() => {
     getSession()
+    dispatch(
+      setEditedArticle({
+        ...editedArticle,
+        userId: loginUser?.user.id,
+      })
+    )
   }, [])
 
   // const [markdownValue, setMarkdownValue] = useState('')
@@ -60,34 +69,24 @@ const MarkdownEditor = () => {
     return key.slice(bucketName.length + 1) // "/"の分だけ加算している
   }
 
-  const imageUploadFunction = async (
-    file:
-      | string
-      | File
-      | Blob
-      | ArrayBuffer
-      | ArrayBufferView
-      | Buffer
-      | FormData
-      | NodeJS.ReadableStream
-      | ReadableStream<Uint8Array>
-      | URLSearchParams
-  ) => {
+  const imageUploadFunction = async (event: any) => {
     const uuid = uuidv4()
     const newImageKey = uuid.split('-')[uuid.split('-').length - 1]
 
-    const { data: inputData }: inputData = await supabase.storage
-      .from('images')
-      .upload(`${loginUser?.user.id}/${newImageKey}`, file, {
-        cacheControl: '3600',
-        upsert: true,
-      })
+    const file = event.target.files[0] // 選択された画像を取得
 
-    console.log(inputData)
+    try {
+      const { data: inputData }: inputData = await supabase.storage
+        .from('images')
+        .upload(`${loginUser?.user.id}/${newImageKey}`, file, {
+          cacheControl: '3600',
+          upsert: true,
+        })
+    } catch (e) {
+      console.log(e)
+    }
 
     const key = `images/${loginUser?.user.id}/${newImageKey}`
-
-    console.log('key', key)
 
     if (!key) {
       throw new Error('Error')
@@ -107,27 +106,20 @@ const MarkdownEditor = () => {
         src: publicURL,
       },
     ])
-    alert(
-      'FileName [ ' +
-        publicURL.data.publicUrl +
-        ' ] コピーし、エディター内で入力してください。'
+    dispatch(
+      setEditedArticle({
+        ...editedArticle,
+        content: editedArticle.content + `![](${publicURL.data.publicUrl})`,
+      })
     )
   }
 
   const autoUploadImage = useMemo(() => {
-    console.log('image')
     return {
       uploadImage: true,
       imageUploadFunction,
     }
   }, [])
-
-  // const onChange = (value: React.SetStateAction<string>) => {
-  // 	setMarkdownValue(value)
-  // }
-  // const onChange = (e: any) => {
-  // 	dispatch(setEditedArticle({ ...editedArticle, content: e.target.value }))
-  // }
 
   const handleSwitch = (e: any) => {
     e.preventDefault()
@@ -162,50 +154,16 @@ const MarkdownEditor = () => {
         style={{ width: '80%', margin: '20px 10% 5px', fontSize: '30px' }}
       />
 
-      {/* {editedArticle.userId !== '' ? (
-        <InputBase
-          disabled
-          value={editedArticle.userId}
-          onChange={() =>
-            dispatch(
-              setEditedArticle({
-                ...editedArticle,
-                // @ts-ignore
-                userId: session?.user.id,
-              })
-            )
-          }
-          style={{ width: '80%', margin: '0 10%', fontSize: '15px' }}
-        />
-      ) : ( */}
-      <InputBase
-        // disabled
-        value={editedArticle.userId}
-        placeholder="IDを入力 : プロフィール欄から確認できます"
-        onChange={(e) =>
-          dispatch(
-            setEditedArticle({
-              ...editedArticle,
-              userId: e.target.value,
-            })
-          )
-        }
-        style={{ width: '80%', margin: '0 10%', fontSize: '15px' }}
-      />
-      {/* )} */}
-
       <div style={{ display: 'flex' }}>
         {switchBoolean === false ? (
           <SimpleMDE
-            // value={markdownValue}
-            // onChange={onChange}
             value={editedArticle.content}
             onChange={(value: any) =>
               dispatch(setEditedArticle({ ...editedArticle, content: value }))
             }
             // options={{ autoUploadImage, toolbar: toolbar }}
             // @ts-ignore
-            options={{ autoUploadImage }}
+            options={{ autoUploadImage, autofocus: writing ? true : '' }}
             style={{ width: '70%', margin: '0 5% 0 10%' }}
           />
         ) : (
@@ -220,10 +178,25 @@ const MarkdownEditor = () => {
           </div>
         )}
         <div style={{ width: '10%', marginRight: ' 5%' }}>
+          <IconButton
+            color="inherit"
+            aria-label="upload picture"
+            component="label"
+            size="large"
+            style={{
+              height: '48px',
+              width: '96px',
+            }}
+          >
+            <input hidden type="file" onChange={imageUploadFunction} />
+            <PhotoCamera />
+          </IconButton>
+
           <ToggleButtonGroup
             exclusive
             onChange={handleSwitch}
             aria-label="text alignment"
+            style={{ marginTop: '20px' }}
           >
             <ToggleButton
               value="false"
@@ -240,6 +213,21 @@ const MarkdownEditor = () => {
               <FastForwardIcon />
             </ToggleButton>
           </ToggleButtonGroup>
+
+          <Button
+            variant="contained"
+            style={{
+              marginTop: '20px',
+              height: '48px',
+              width: '96px',
+              backgroundColor: 'black',
+              fontSize: '11px',
+            }}
+            type="button"
+            onClick={() => setWriting(!writing)}
+          >
+            {writing ? '下書き保存' : '再度入力する'}
+          </Button>
 
           <form onSubmit={submitHandler}>
             <Button

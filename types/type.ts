@@ -6,7 +6,7 @@ export interface Articles {
 }
 
 export interface EditArticle {
-  userId: string
+  userId: string | undefined
   title: string
   content: string
 }
