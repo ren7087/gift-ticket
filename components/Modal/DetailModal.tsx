@@ -27,7 +27,6 @@ const style = {
 
 const DetailModal: FC<Props> = (props) => {
   const { open, article, handleCloseDetailModal } = props
-  console.log(article)
   return (
     <Modal
       open={open}

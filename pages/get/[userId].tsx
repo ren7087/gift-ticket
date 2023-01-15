@@ -8,19 +8,36 @@ import { Articles, ArticleStatus } from '../../types/type'
 import Navbar from '../../components/Navbar'
 import { Box, CircularProgress, Grid, useMediaQuery } from '@mui/material'
 import IsDoneModal from '../../components/Modal/IsDoneModal'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  selectArticleStatus,
+  setEditedArticleStatus,
+} from '../../slices/article'
+import { GetServerSideProps } from 'next'
 
-const Index = () => {
-  const router = useRouter()
-  const loginUserId: string = String(router.query.userId)
+// propsの型を定義する
+type Props = {
+  userId: string
+}
+
+const Index = (props: Props) => {
+  const dispatch = useDispatch()
+  const editedArticleStatus = useSelector(selectArticleStatus)
   const { useQueryArticleReceiver } = UseQueryArticle()
 
   const { status: articleReceiverLoading, data: articleReceiver } =
-    useQueryArticleReceiver(loginUserId)
+    useQueryArticleReceiver(props.userId)
 
   const [getPage, setGetPage] = useState(false)
 
   useEffect(() => {
     setGetPage(true)
+    dispatch(
+      setEditedArticleStatus({
+        ...editedArticleStatus,
+        receiverId: props.userId,
+      })
+    )
   }, [])
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -44,9 +61,6 @@ const Index = () => {
 
   const matches: boolean = useMediaQuery('(min-width:639px)')
 
-  // const handleClick = async () => {
-  //   refetch()
-  // }
   if (articleReceiverLoading === 'loading')
     return (
       <Box sx={{ display: 'flex', margin: '40% 0 0 45%' }}>
@@ -61,7 +75,7 @@ const Index = () => {
         {/* @ts-ignore */}
         {articleReceiver?.articles?.map(
           (article: Articles) =>
-            article.userId == router.query.userId && (
+            article.userId == props.userId && (
               <Grid item xs={matches ? 4 : 12} key={article.id}>
                 <DesignCard
                   article={article}
@@ -108,3 +122,13 @@ const Index = () => {
 }
 
 export default Index
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const props = {
+    userId: context.query.userId,
+  }
+
+  return {
+    props: props,
+  }
+}
