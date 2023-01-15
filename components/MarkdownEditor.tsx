@@ -14,6 +14,7 @@ import {
   Button,
   IconButton,
   InputBase,
+  Snackbar,
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material'
@@ -26,12 +27,15 @@ import { setEditedArticle, selectArticle } from '../slices/article'
 import Navbar from './Navbar'
 import { Session } from '@supabase/supabase-js'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface inputData {
   [prop: string]: any
 }
 
 const MarkdownEditor = () => {
+  // 初期描画
+  const [loading, setLoading] = useState(true)
   //loginUser取得
   const [loginUser, setLoginUser] = useState<Session | null>()
   const [writing, setWriting] = useState<boolean>(true)
@@ -51,18 +55,23 @@ const MarkdownEditor = () => {
         userId: loginUser?.user.id,
       })
     )
+    dispatch(
+      setEditedArticle({
+        ...editedArticle,
+        content: localStorage.getItem('EditorContent') || '',
+      })
+    )
   }, [])
 
-  // const [markdownValue, setMarkdownValue] = useState('')
   const [switchBoolean, setSwitchBoolean] = useState(false)
-  const { session } = UseUser()
+  // const { session } = UseUser()
   const dispatch = useDispatch()
   const editedArticle = useSelector(selectArticle)
   const { createArticleMutation } = useAppMutate()
 
-  {
-    session && console.log('session', session)
-  }
+  // {
+  //   session && console.log('session', session)
+  // }
 
   // storage の key から bucket 名を取り除く
   const removeBucketPath = (key: string, bucketName: string) => {
@@ -121,6 +130,14 @@ const MarkdownEditor = () => {
     }
   }, [])
 
+  const localstorageRegister = () => {
+    setWriting(!writing)
+    console.log(editedArticle.content)
+    if (writing) {
+      localStorage.setItem('EditorContent', editedArticle.content)
+    }
+  }
+
   const handleSwitch = (e: any) => {
     e.preventDefault()
     setSwitchBoolean(!switchBoolean)
@@ -129,7 +146,33 @@ const MarkdownEditor = () => {
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     createArticleMutation.mutate(editedArticle)
+    // 投稿成功した時のアラート
+    setOpen(true)
   }
+
+  // 投稿成功した時のアラート  TODO : アラート系は一つにまとめたい
+  const [open, setOpen] = React.useState(false)
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false)
+  }
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  )
 
   if (createArticleMutation.error) {
     return <div>{'Error'}</div>
@@ -140,6 +183,14 @@ const MarkdownEditor = () => {
   }
   return (
     <div>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="投稿完了しました！"
+        action={action}
+      />
+
       <Navbar />
 
       <InputBase
@@ -220,13 +271,14 @@ const MarkdownEditor = () => {
               marginTop: '20px',
               height: '48px',
               width: '96px',
-              backgroundColor: 'black',
-              fontSize: '11px',
+              backgroundColor: writing ? 'black' : 'white',
+              color: writing ? 'white' : 'black',
+              fontSize: '2px',
             }}
             type="button"
-            onClick={() => setWriting(!writing)}
+            onClick={localstorageRegister}
           >
-            {writing ? '下書き保存' : '再度入力する'}
+            {writing ? '内容保存する' : '再度入力する'}
           </Button>
 
           <form onSubmit={submitHandler}>
@@ -240,7 +292,7 @@ const MarkdownEditor = () => {
               }}
               type="submit"
             >
-              Submit
+              完成！
             </Button>
           </form>
         </div>
