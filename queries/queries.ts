@@ -95,3 +95,24 @@ export const CREATE_ARTICLE_STATUS = gql`
     }
   }
 `
+
+export const UPDATE_ARTICLE_STATUS = gql`
+  mutation UpdateArticleStatus(
+    $articleId: uuid!
+    $isDone: Boolean!
+    $receiverId: uuid!
+  ) {
+    update_articles_status(
+      _set: { isDone: $isDone }
+      where: {
+        articleId: { _eq: $articleId }
+        receiverId: { _eq: $receiverId }
+      }
+    ) {
+      returning {
+        id
+        isDone
+      }
+    }
+  }
+`

@@ -1,7 +1,11 @@
 import { useEffect } from 'react'
 import { useQueryClient, useMutation } from 'react-query'
 import { GraphQLClient } from 'graphql-request'
-import { CREATE_ARTICLE, CREATE_ARTICLE_STATUS } from '../queries/queries'
+import {
+  CREATE_ARTICLE,
+  CREATE_ARTICLE_STATUS,
+  UPDATE_ARTICLE_STATUS,
+} from '../queries/queries'
 import {
   Articles,
   ArticleStatus,
@@ -63,8 +67,36 @@ export const useAppMutate = () => {
       },
     }
   )
+
+  const updateArticleStatusMutation = useMutation(
+    (articleStatus: EditArticleStatus) =>
+      graphQLClient.request(UPDATE_ARTICLE_STATUS, articleStatus),
+    {
+      onSuccess: (res, variables) => {
+        const previousArticleStatus =
+          queryClient.getQueryData<ArticleStatus[]>('articleStatus')
+        if (previousArticleStatus) {
+          queryClient.setQueryData(
+            'articleStatus',
+            previousArticleStatus.map((articleStatusSelected) =>
+              articleStatusSelected.articleId === variables.articleId &&
+              articleStatusSelected.receiverId === variables.receiverId
+                ? res.update_articles_status
+                : articleStatusSelected
+            )
+          )
+        }
+        dispatch(resetEditedArticleStatus())
+      },
+      onError: () => {
+        dispatch(resetEditedArticleStatus())
+        console.log('error')
+      },
+    }
+  )
   return {
     createArticleMutation,
     createArticleStatusMutation,
+    updateArticleStatusMutation,
   }
 }

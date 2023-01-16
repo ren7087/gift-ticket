@@ -1,6 +1,12 @@
-import { Box, Checkbox, Modal, Typography } from '@mui/material'
-import React, { FC, useState } from 'react'
+import { Box, Button, Checkbox, Modal, Typography } from '@mui/material'
+import React, { FC, FormEvent, useState } from 'react'
 import 'easymde/dist/easymde.min.css'
+import { useAppMutate } from '../../hooks/useAppMutate'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  selectArticleStatus,
+  setEditedArticleStatus,
+} from '../../slices/article'
 
 type Props = {
   open: boolean
@@ -23,11 +29,17 @@ const style = {
 
 const IsDoneModal: FC<Props> = (props) => {
   const { open, articleId, handleCloseIsDoneModal } = props
-  const [checked, setChecked] = React.useState(true)
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked)
+  const dispatch = useDispatch()
+  const editedArticleStatus = useSelector(selectArticleStatus)
+  const { updateArticleStatusMutation } = useAppMutate()
+
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    updateArticleStatusMutation.mutate(editedArticleStatus)
+    handleCloseIsDoneModal() //これ必要ないかも
   }
+
   return (
     <Modal
       open={open}
@@ -36,14 +48,32 @@ const IsDoneModal: FC<Props> = (props) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography variant="h6" gutterBottom>
-          使用済みにする
-        </Typography>
-        <Checkbox
-          checked={checked}
-          onChange={handleChange}
-          inputProps={{ 'aria-label': 'controlled' }}
-        />
+        <form onSubmit={submitHandler}>
+          <Typography variant="h6" gutterBottom>
+            使用済みにする
+          </Typography>
+          <Checkbox
+            checked={editedArticleStatus.isDone}
+            onChange={(event) =>
+              dispatch(
+                setEditedArticleStatus({
+                  ...editedArticleStatus,
+                  isDone: event.target.checked,
+                })
+              )
+            }
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: 'black',
+            }}
+            type="submit"
+          >
+            Submit
+          </Button>
+        </form>
       </Box>
     </Modal>
   )
