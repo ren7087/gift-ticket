@@ -1,5 +1,5 @@
 import { Box, Button, Modal, TextField, Typography } from '@mui/material'
-import React, { FC, FormEvent, useState } from 'react'
+import React, { FC, FormEvent, useEffect, useState } from 'react'
 import QRCode from 'react-qr-code'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
@@ -38,6 +38,15 @@ const QrModal: FC<Props> = (props) => {
   const editedArticleStatus = useSelector(selectArticleStatus)
   const { createArticleStatusMutation } = useAppMutate()
 
+  useEffect(() => {
+    dispatch(
+      setEditedArticleStatus({
+        ...editedArticleStatus,
+        articleId: articleId,
+      })
+    )
+  }, [])
+
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     createArticleStatusMutation.mutate(editedArticleStatus)
@@ -74,21 +83,6 @@ const QrModal: FC<Props> = (props) => {
               }
               style={{ paddingBottom: '5%' }}
             />
-            <TextField
-              label="article"
-              variant="outlined"
-              value={editedArticleStatus.articleId}
-              onChange={(e) =>
-                dispatch(
-                  setEditedArticleStatus({
-                    ...editedArticleStatus,
-                    articleId: e.target.value,
-                  })
-                )
-              }
-              style={{ paddingBottom: '5%' }}
-            />
-
             <Button
               variant="contained"
               style={{

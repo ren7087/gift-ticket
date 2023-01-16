@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from 'react'
 import DesignCard from '../../components/Card/DesignCard'
-import DeleteModal from '../../components/Modal/DeleteModal'
-import DetailModal from '../../components/Modal/DetailModal'
-import QrModal from '../../components/Modal/QrModal'
 import UseQueryArticle from '../../hooks/useQueryArticle'
 import { useRouter } from 'next/router'
 import { Articles } from '../../types/type'
 import Navbar from '../../components/Navbar'
 import { Box, CircularProgress, Grid, useMediaQuery } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import Paper from '@mui/material/Paper'
 
 const Index = () => {
   const router = useRouter()
@@ -18,21 +12,6 @@ const Index = () => {
   const { status, data } = useQueryArticle()
   // @ts-ignore
   const array = data?.articles
-
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const [openQrModal, setOpenQrModal] = useState(false)
-  const [openDetailModal, setOpenDetailModal] = useState(false)
-
-  const handleOpenDeleteModal = () => setOpenDeleteModal(true)
-  const handleCloseDeleteModal = () => setOpenDeleteModal(false)
-
-  const handleOpenQrModal = () => setOpenQrModal(true)
-  const handleCloseQrModal = () => setOpenQrModal(false)
-
-  const handleOpenDetailModal = () => {
-    setOpenDetailModal(true)
-  }
-  const handleCloseDetailModal = () => setOpenDetailModal(false)
 
   const matches: boolean = useMediaQuery('(min-width:639px)')
 
@@ -70,24 +49,6 @@ const Index = () => {
                   marginRight={'15%'}
                   marginLeft={'5%'}
                   margin={'5%'}
-                  handleOpenDeleteModal={handleOpenDeleteModal}
-                  handleOpenQrModal={handleOpenQrModal}
-                  handleOpenDetailModal={handleOpenDetailModal}
-                />
-                <DeleteModal
-                  open={openDeleteModal}
-                  handleCloseDeleteModal={handleCloseDeleteModal}
-                />
-                <QrModal
-                  open={openQrModal}
-                  handleCloseQrModal={handleCloseQrModal}
-                  articleId={article.id}
-                  display={'flex'}
-                />
-                <DetailModal
-                  open={openDetailModal}
-                  handleCloseDetailModal={handleCloseDetailModal}
-                  article={article.content}
                 />
               </Grid>
             )
