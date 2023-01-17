@@ -70,6 +70,11 @@ export const GET_ARTICLE_RECEIVER = gql`
       userId
       title
       content
+      articles_statuses {
+        isDone
+        articleId
+        receiverId
+      }
     }
   }
 `

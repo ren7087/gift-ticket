@@ -56,6 +56,7 @@ const Index = (props: Props) => {
               <Grid item xs={matches ? 4 : 12} key={article.id}>
                 <DesignCard
                   article={article}
+                  isDone={article.articles_statuses[0].isDone}
                   key={article.id}
                   label={'カートに追加する'}
                   price={'1000'}
@@ -64,7 +65,6 @@ const Index = (props: Props) => {
                   borderRadius={'20px'}
                   width={'90%'}
                   color={'#F8C4CF'}
-                  backgroundColor={'#F8C4CF'}
                   fontWeight={'bold'}
                   marginTop={'15px'}
                   marginRight={'15%'}

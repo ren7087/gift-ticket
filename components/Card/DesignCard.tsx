@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   CardActionArea,
@@ -12,7 +13,7 @@ import {
   Typography,
 } from '@mui/material'
 import Card from '@mui/material/Card'
-import { FormEvent, MouseEventHandler, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FC } from 'react'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -20,11 +21,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import { generateRandomAvatarOptions } from '../avatar'
 import Avatar from 'avataaars'
 import { Articles, AvatarType } from '../../types/type'
-import { setEditedArticleStatus } from '../../slices/article'
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectArticleStatus } from '../../slices/article'
-import { useAppMutate } from '../../hooks/useAppMutate'
 import DetailModal from '../Modal/DetailModal'
 import QrModal from '../Modal/QrModal'
 import DeleteModal from '../Modal/DeleteModal'
@@ -49,6 +46,7 @@ type Props = {
   height?: string
   margin?: string
   getPage?: boolean
+  isDone?: boolean
 }
 
 /**
@@ -60,7 +58,6 @@ const DesignCard: FC<Props> = (props) => {
     label,
     price,
     title,
-    backgroundColor = '#f28728',
     color = '#fff',
     size,
     marginTop,
@@ -74,6 +71,8 @@ const DesignCard: FC<Props> = (props) => {
     margin,
     height,
     getPage,
+    isDone,
+    backgroundColor = isDone ? 'black' : 'white',
   } = props
 
   const imageStyle = {
@@ -124,18 +123,31 @@ const DesignCard: FC<Props> = (props) => {
   }
   const handleCloseDetailModal = () => setOpenDetailModal(false)
 
-  const handleOpenIsDoneModal = () => setOpenIsDoneModal(true)
+  const handleOpenIsDoneModal = () =>
+    isDone ? console.log('error') : setOpenIsDoneModal(true)
   const handleCloseIsDoneModal = () => setOpenIsDoneModal(false)
 
   return (
     <>
       <Card sx={{ maxWidth: 345 }} style={{ borderRadius: '20px' }}>
         <CardActionArea>
-          <CardContent>
-            <Stack direction="row" spacing={1}>
-              <Chip label="primary" color="primary" style={chipStyle} />
-            </Stack>
-          </CardContent>
+          {getPage ? (
+            <CardContent>
+              <Stack direction="row" spacing={1}>
+                <Chip
+                  label={isDone ? 'DONE' : 'UNUSED'}
+                  color={isDone ? 'primary' : 'default'}
+                  style={chipStyle}
+                />
+              </Stack>
+            </CardContent>
+          ) : (
+            <CardContent>
+              <Stack direction="row" spacing={1}>
+                <Chip label="Thank you" color="primary" style={chipStyle} />
+              </Stack>
+            </CardContent>
+          )}
           <Avatar
             style={{ width: '100px', height: '100px', paddingLeft: '35%' }}
             avatarStyle="Circle"
@@ -183,14 +195,20 @@ const DesignCard: FC<Props> = (props) => {
               </div>
               {getPage ? (
                 <div
-                  style={{ width: '23%', marginLeft: '10%' }}
+                  style={{
+                    width: '23%',
+                    marginLeft: '10%',
+                    cursor: isDone ? 'not-allowed' : 'pointer',
+                  }}
                   onClick={handleOpenIsDoneModal}
                 >
                   <AssignmentTurnedInIcon fontSize="small" />
                   <Typography
                     gutterBottom
                     variant="body2"
-                    style={{ fontWeight: 'bold' }}
+                    style={{
+                      fontWeight: 'bold',
+                    }}
                   >
                     DONE
                   </Typography>

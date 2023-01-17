@@ -1,4 +1,5 @@
 export interface Articles {
+  articles_statuses: any
   id: string
   userId: string
   title: string
