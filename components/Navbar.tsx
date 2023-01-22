@@ -68,7 +68,7 @@ const Navbar: FC<Props> = (props) => {
           )}
 
           <Link
-            href="/customize"
+            href={`/customize/${loginUser?.user.id}`}
             underline="none"
             style={{ color: 'black', fontWeight: 'bold', margin: '0 2%' }}
           >

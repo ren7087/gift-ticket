@@ -112,7 +112,7 @@ const Home: NextPage = () => {
         <Grid container spacing={2}>
           <Grid item xs={matches ? 4 : 12}>
             <Item style={{ padding: 0 }}>
-              <CardCreate />
+              <CardCreate userId={loginUser?.user.id || ''} />
             </Item>
           </Grid>
           <Grid item xs={matches ? 4 : 12}>

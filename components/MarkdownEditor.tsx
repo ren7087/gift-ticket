@@ -11,6 +11,8 @@ import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import supabase from '../utils/supabase-client'
 import {
+  Alert,
+  AlertTitle,
   Button,
   IconButton,
   InputBase,
@@ -33,7 +35,12 @@ interface inputData {
   [prop: string]: any
 }
 
-const MarkdownEditor = () => {
+type Props = {
+  userId: string
+}
+
+const MarkdownEditor = (props: Props) => {
+  const { userId } = props
   // 初期描画
   const [loading, setLoading] = useState(true)
   //loginUser取得
@@ -49,15 +56,11 @@ const MarkdownEditor = () => {
   }
   useEffect(() => {
     getSession()
+
     dispatch(
       setEditedArticle({
         ...editedArticle,
-        userId: loginUser?.user.id,
-      })
-    )
-    dispatch(
-      setEditedArticle({
-        ...editedArticle,
+        userId: userId,
         content: localStorage.getItem('EditorContent') || '',
       })
     )
@@ -68,6 +71,8 @@ const MarkdownEditor = () => {
   const dispatch = useDispatch()
   const editedArticle = useSelector(selectArticle)
   const { createArticleMutation } = useAppMutate()
+  console.log(userId)
+  console.log('editedArticle.userId', editedArticle.userId)
 
   // {
   //   session && console.log('session', session)
@@ -118,7 +123,9 @@ const MarkdownEditor = () => {
     dispatch(
       setEditedArticle({
         ...editedArticle,
-        content: editedArticle.content + `![](${publicURL.data.publicUrl})`,
+        content:
+          editedArticle.content +
+          `<img src=${publicURL.data.publicUrl} width='250px' height='250px' />`,
       })
     )
   }
@@ -192,6 +199,14 @@ const MarkdownEditor = () => {
       />
 
       <Navbar />
+
+      <Alert severity="success" style={{ width: '50%', margin: '2% 0 0 10%' }}>
+        <AlertTitle>記載の流れ</AlertTitle>
+        内容を記載する
+        <br /> &gt; 内容を保存する
+        <br /> &gt; タイトルを記入する
+        <br /> &gt; 完成ボタンをクリック！
+      </Alert>
 
       <InputBase
         sx={{ ml: 1, flex: 1 }}
