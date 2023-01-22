@@ -35,7 +35,7 @@ const Navbar: FC<Props> = (props) => {
   }
   useEffect(() => {
     getSession()
-  }, [])
+  }, [loginUser])
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
