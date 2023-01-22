@@ -25,6 +25,15 @@ export const GET_ARTICLES = gql`
   }
 `
 
+export const DELETE_ARTICLE = gql`
+  mutation DeleteArticle($id: uuid!) {
+    delete_articles_by_pk(id: $id) {
+      id
+      title
+    }
+  }
+`
+
 export const GET_ARTICLE_STATUS = gql`
   query GetArticleStatus {
     articles_status {

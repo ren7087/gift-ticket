@@ -92,7 +92,7 @@ const UseQueryArticle = () => {
     return useQuery<Articles[], Error>({
       queryKey: 'articles',
       queryFn: fetchArticle,
-      staleTime: 0,
+      staleTime: 300000,
     })
   }
 
@@ -104,7 +104,7 @@ const UseQueryArticle = () => {
     return useQuery<ArticleStatus[], Error>({
       queryKey: 'articleStatus',
       queryFn: fetchArticleStatus,
-      staleTime: 0,
+      staleTime: 300000,
     })
   }
 
@@ -116,7 +116,7 @@ const UseQueryArticle = () => {
     return useQuery<Articles[], Error>({
       queryKey: 'article',
       queryFn: fetchArticleUser,
-      staleTime: 0,
+      staleTime: 300000,
     })
   }
 
@@ -128,7 +128,7 @@ const UseQueryArticle = () => {
   //   return useQuery<Articles[], Error>({
   //     queryKey: ['article_detail', id],
   //     queryFn: fetchArticleDetail(id),
-  //     staleTime: 0,
+  //     staleTime: 300000,
   //   })
   // }
 
@@ -141,7 +141,7 @@ const UseQueryArticle = () => {
     return useQuery<ArticleStatus[], Error>({
       queryKey: ['articleReceiver', receiverId],
       queryFn: () => fetchArticleReceiver(receiverId),
-      staleTime: 0,
+      staleTime: 300000,
     })
   }
 

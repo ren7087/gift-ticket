@@ -11,19 +11,20 @@ const friendAdd = () => {
       <SettingNavbar />
       <div
         style={{
-          margin: '2% 30% 10% 30%',
+          margin: '2% 20% 10% 20%',
           backgroundColor: '#F1F5F9',
-          padding: '10%',
+          padding: '20%',
           height: '100px',
           width: '20%',
           textAlign: 'center',
           borderRadius: '10px',
         }}
       >
+        <h3 style={{ marginTop: '-25%' }}>友人を追加</h3>
         <div style={{ marginBottom: '30px' }}>
-          <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+          <TextField id="outlined-basic" label="userId" variant="outlined" />
         </div>
-        <Button variant="contained">Contained</Button>
+        <Button variant="contained">register</Button>
       </div>
     </div>
   )

@@ -258,6 +258,7 @@ const DesignCard: FC<Props> = (props) => {
       />
       <DeleteModal
         open={openDeleteModal}
+        articleId={article != undefined ? article.id : ''}
         handleCloseDeleteModal={handleCloseDeleteModal}
       />
       <IsDoneModal

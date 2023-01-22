@@ -5,6 +5,7 @@ import {
   CREATE_ARTICLE,
   CREATE_ARTICLE_STATUS,
   UPDATE_ARTICLE_STATUS,
+  DELETE_ARTICLE,
 } from '../queries/queries'
 import {
   Articles,
@@ -94,8 +95,25 @@ export const useAppMutate = () => {
       },
     }
   )
+  const deleteArticleMutation = useMutation(
+    (id: string) => graphQLClient.request(DELETE_ARTICLE, { id: id }),
+    {
+      onSuccess: (res, variables) => {
+        const previousArticles =
+          queryClient.getQueryData<Articles[]>('articles')
+        if (previousArticles) {
+          queryClient.setQueryData<Articles[]>(
+            'articles',
+            previousArticles.filter((articles) => articles.id !== variables)
+          )
+        }
+        dispatch(resetEditedArticle())
+      },
+    }
+  )
   return {
     createArticleMutation,
+    deleteArticleMutation,
     createArticleStatusMutation,
     updateArticleStatusMutation,
   }
