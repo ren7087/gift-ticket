@@ -3,6 +3,8 @@ import {
   Button,
   IconButton,
   Link,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -16,6 +18,9 @@ import { useRouter } from 'next/router'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Session } from '@supabase/supabase-js'
 import supabase from '../utils/supabase-client'
+import CreateIcon from '@mui/icons-material/Create'
+import AccessibilityIcon from '@mui/icons-material/Accessibility'
+import Diversity3Icon from '@mui/icons-material/Diversity3'
 
 type Props = {
   page?: string
@@ -27,6 +32,7 @@ const Navbar: FC<Props> = (props) => {
   const router = useRouter()
   const { session, signOut, signInWithGoogle } = UseUser()
   const [loginUser, setLoginUser] = useState<Session | null>(null)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const getSession = async () => {
     const {
       data: { session },
@@ -35,7 +41,21 @@ const Navbar: FC<Props> = (props) => {
   }
   useEffect(() => {
     getSession()
-  }, [loginUser])
+  }, [])
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+  const signOutNav = () => {
+    signOut()
+  }
+  const signInWithGoogleNav = () => {
+    signInWithGoogle()
+  }
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -95,31 +115,56 @@ const Navbar: FC<Props> = (props) => {
             aria-label="menu"
             sx={{ mr: 2 }}
             style={{ color: 'black', margin: '0 4%' }}
+            onClick={handleMenu}
           >
-            <AccountCircleIcon onClick={() => router.push(`/settings/`)} />
+            <AccountCircleIcon />
           </IconButton>
-
-          {loginUser ? (
-            <Button
-              variant="outlined"
-              startIcon={<GoogleIcon />}
-              size="large"
-              onClick={() => signOut()}
-              style={{ backgroundColor: 'white' }}
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            {!loginUser && (
+              <MenuItem
+                onClick={signInWithGoogleNav}
+                style={{ textAlign: 'center' }}
+              >
+                <GoogleIcon style={{ padding: '3% 5% 3% 1%' }} />
+                ログイン
+              </MenuItem>
+            )}
+            <MenuItem
+              onClick={() => router.push(`/settings`)}
+              style={{ textAlign: 'center' }}
             >
-              {matches && 'サインアウト'}
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              startIcon={<GoogleIcon />}
-              size="large"
-              onClick={() => signInWithGoogle()}
-              style={{ backgroundColor: 'black' }}
+              <AccessibilityIcon style={{ padding: '3% 5% 3% 1%' }} />
+              setting
+            </MenuItem>
+            <MenuItem
+              onClick={() => router.push(`/settings/friends`)}
+              style={{ textAlign: 'center' }}
             >
-              {matches && 'ログイン'}
-            </Button>
-          )}
+              <Diversity3Icon style={{ padding: '3% 5% 3% 1%' }} />
+              friends
+            </MenuItem>
+            <MenuItem
+              onClick={() => router.push(`/settings/friendAdd`)}
+              style={{ textAlign: 'center' }}
+            >
+              <CreateIcon style={{ padding: '3% 5% 3% 1%' }} />
+              Add
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
     </Box>

@@ -70,7 +70,7 @@ const QrModal: FC<Props> = (props) => {
               送信先
             </Typography>
             <TextField
-              label="email"
+              label="userId"
               variant="outlined"
               value={editedArticleStatus.receiverId}
               onChange={(e) =>
