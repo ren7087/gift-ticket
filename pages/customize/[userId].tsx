@@ -1,5 +1,4 @@
 import { GetServerSideProps } from 'next'
-import { useState } from 'react'
 import MarkdownEditor from '../../components/MarkdownEditor'
 
 type Props = {

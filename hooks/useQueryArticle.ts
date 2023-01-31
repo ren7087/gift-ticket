@@ -1,11 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { GraphQLClient, Variables } from 'graphql-request'
 import { useQuery } from 'react-query'
-import {
-  Articles,
-  QueryArticleUserSelected,
-  ArticleStatus,
-} from '../types/type'
+import { Articles, ArticleStatus } from '../types/type'
 import {
   GET_ARTICLES,
   GET_ARTICLE_STATUS,

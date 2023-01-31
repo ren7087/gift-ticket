@@ -1,15 +1,8 @@
 import {
-  Alert,
-  Box,
-  Button,
   CardActionArea,
-  CardActions,
   CardContent,
-  CardMedia,
   Chip,
-  Modal,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material'
 import Card from '@mui/material/Card'
@@ -55,11 +48,8 @@ type Props = {
 const DesignCard: FC<Props> = (props) => {
   const {
     article,
-    label,
-    price,
     title,
     color = '#fff',
-    size,
     marginTop,
     marginRight,
     marginLeft,
@@ -68,18 +58,11 @@ const DesignCard: FC<Props> = (props) => {
     outline,
     border,
     width,
-    margin,
     height,
     getPage,
     isDone,
     backgroundColor = isDone ? 'black' : 'white',
   } = props
-
-  const imageStyle = {
-    borderRadius,
-    width,
-    marginLeft,
-  }
 
   const fontStyle = {
     fontWeight,
@@ -88,16 +71,6 @@ const DesignCard: FC<Props> = (props) => {
 
   const chipStyle = {
     backgroundColor,
-  }
-
-  const style = {
-    backgroundColor,
-    color,
-    borderRadius,
-    outline,
-    border,
-    width,
-    height,
   }
 
   const [avatarOptions, setAvatarOptions] = useState<AvatarType>()

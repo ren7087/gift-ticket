@@ -1,5 +1,4 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import Image from 'next/image'

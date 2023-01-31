@@ -1,12 +1,16 @@
 import DesignCard from '../../components/Card/DesignCard'
 import UseQueryArticle from '../../hooks/useQueryArticle'
-import { useRouter } from 'next/router'
 import { Articles } from '../../types/type'
 import Navbar from '../../components/Navbar'
 import { Box, CircularProgress, Grid, useMediaQuery } from '@mui/material'
+import { GetServerSideProps } from 'next'
 
-const Index = () => {
-  const router = useRouter()
+// propsの型を定義する
+type Props = {
+  userId: string
+}
+
+const Index = (props: Props) => {
   const { useQueryArticleUserSelected, useQueryArticle } = UseQueryArticle()
   // const { status, data } = useQueryArticleUserSelected(router.query.userId)
   const { status, data } = useQueryArticle()
@@ -31,7 +35,7 @@ const Index = () => {
       <Grid container spacing={2} style={{ margin: '1%' }}>
         {array?.map(
           (article: Articles) =>
-            article.userId == router.query.userId && (
+            article.userId == props.userId && (
               <Grid item xs={matches ? 4 : 12} key={article.id}>
                 <DesignCard
                   article={article}
@@ -59,3 +63,13 @@ const Index = () => {
 }
 
 export default Index
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const props = {
+    userId: context.query.userId,
+  }
+
+  return {
+    props: props,
+  }
+}
