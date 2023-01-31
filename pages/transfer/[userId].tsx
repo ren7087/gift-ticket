@@ -19,9 +19,6 @@ const Index = (props: Props) => {
 
   const matches: boolean = useMediaQuery('(min-width:639px)')
 
-  // const handleClick = async () => {
-  //   refetch()
-  // }
   if (status === 'loading')
     return (
       <Box sx={{ display: 'flex', margin: '40% 0 0 45%' }}>

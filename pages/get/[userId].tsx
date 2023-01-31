@@ -70,7 +70,7 @@ const Index = (props: Props) => {
                   marginRight={'15%'}
                   marginLeft={'5%'}
                   margin={'5%'}
-                  getPage={getPage}
+                  getPage={getPage} //getページか否か
                 />
               </Grid>
             )
